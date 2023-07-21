@@ -1,0 +1,29 @@
+package com.github.severinnitsche.cards;
+
+import static com.github.severinnitsche.cards.Color.*;
+
+/**
+ * This enum contains all 32 cards in a deck with their respective values.
+ */
+public enum Card {
+  SEVEN_OF_HEARTS(7, HEART), EIGHT_OF_HEARTS(8, HEART), NINE_OF_HEARTS(9, HEART),
+  TEN_OF_HEARTS(10, HEART), JACK_OF_HEARTS(20, HEART),
+  QUEEN_OF_HEARTS(10, HEART), KING_OF_HEARTS(10, HEART), ACE_OF_HEARTS(11, HEART),
+  SEVEN_OF_DIAMONDS(7, DIAMONDS), EIGHT_OF_DIAMONDS(8, DIAMONDS), NINE_OF_DIAMONDS(9, DIAMONDS),
+  TEN_OF_DIAMONDS(10, DIAMONDS), JACK_OF_DIAMONDS(20, DIAMONDS),
+  QUEEN_OF_DIAMONDS(10, DIAMONDS), KING_OF_DIAMONDS(10, DIAMONDS), ACE_OF_DIAMONDS(11, DIAMONDS),
+  SEVEN_OF_CLUBS(7, CLUBS), EIGHT_OF_CLUBS(8, CLUBS), NINE_OF_CLUBS(9, CLUBS),
+  TEN_OF_CLUBS(10, CLUBS), JACK_OF_CLUBS(20, CLUBS),
+  QUEEN_OF_CLUBS(10, CLUBS), KING_OF_CLUBS(10, CLUBS), ACE_OF_CLUBS(11, CLUBS),
+  SEVEN_OF_SPADES(7, SPADES), EIGHT_OF_SPADES(8, SPADES), NINE_OF_SPADES(9, SPADES),
+  TEN_OF_SPADES(10, SPADES), JACK_OF_SPADES(20, SPADES),
+  QUEEN_OF_SPADES(10, SPADES), KING_OF_SPADES(10, SPADES), ACE_OF_SPADES(11, SPADES);
+
+  public final int value;
+  public final Color color;
+
+  Card(int value, Color color) {
+    this.value = value;
+    this.color = color;
+  }
+}
