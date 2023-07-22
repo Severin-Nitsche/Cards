@@ -9,5 +9,5 @@ package com.github.severinnitsche.cards;
  * @param numberOfCards every player's number of cards
  * @param playerNumber the index of the current player
  */
-public record Information(int drawCards, Color wish, Card[] stack, Hand hand, int[] numberOfCards, int playerNumber) {
+public record Information(int drawCards, Color wish, Stack stack, Hand hand, int[] numberOfCards, int playerNumber) {
 }

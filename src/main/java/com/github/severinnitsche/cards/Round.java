@@ -7,39 +7,61 @@ import java.util.Random;
  */
 public class Round {
 
-  private final Random source;
-  private Card[] deck; // the unseen cards
-  private int deckPtr; // the top card in the deck
-  private int stackPtr; // the next card position in the stack
-  private Card[] stack; // the played cards
+  private final Random source; // a source of randomness
+
+  private Stack deck; // the stash of cards to draw
+  private Stack stack; // the stack of cards played
+
   public final int players; // the number of players
+
   private Hand[] player; // the hands of the players
   private int current; // the current player
 
+  private int draws; // the number of cards to draw
+  private Color wish; // the color of an active wish
+
   public Round(Random source, int players, int beginner) {
     this.source = source;
-    this.players = players;
-    this.player = new Hand[players];
-    this.current = beginner;
 
-    this.deck = Card.values();
-    this.stack = new Card[deck.length];
-    this.deckPtr = deck.length - 1;
-    this.stackPtr = 0;
-    for (int i = 0; i < deck.length; i++) {
-      int j = source.nextInt(deck.length);
-      Card temp = deck[i];
-      deck[i] = deck[j];
-      deck[j] = temp;
+    this.deck = new Stack(Card.values());
+    this.stack = new Stack(deck.capacity());
+    deck.shuffle(source);
+    stack.add(deck.draw());
+
+    this.players = players;
+    this.current = beginner;
+    this.player = new Hand[players];
+
+    for (int i = 0; i < players; i++) {
+      this.player[i] = new Hand();
     }
-    this.stack[stackPtr++] = this.deck[deckPtr--];
 
     for (int c = 0; c < 6; c++) {
       for (int i = 0; i < players; i++) {
-        this.player[(beginner+i)%players].draw(this.deck[deckPtr--]);
+        this.player[(beginner+i)%players].draw(this.deck.draw());
       }
     }
-    this.player[beginner].draw(this.deck[deckPtr--]);
+    this.player[beginner].draw(this.deck.draw());
+  }
+
+  /**
+   * @return the information for the next player
+   */
+  public Information info() {
+    int[] numOfCards = new int[players];
+    for (int i = 0; i < players; i++) {
+      numOfCards[i] = player[i].cards();
+    }
+    return new Information(draws, wish, stack, player[current], numOfCards, current);
+  }
+
+  /**
+   * Applies the given action to the game.
+   * @param action the chosen action
+   */
+  public void act(Action action) {
+    // TODO: Write Validator (externally)
+    // TODO: Apply action (locally)
   }
 
 }
