@@ -23,3 +23,39 @@ Die Wertung wird wie folgt vorgenommen:
 | Ass         | 11        |
 
 Der Spieler, der nach allen Runden die meisten Punkte hat, verliert.
+
+## Semantische Gliederung
+
+Ein **Spiel** besteht aus mehreren **Runden**.
+
+In jeder **Runde** beginnt ein anderer **Spieler**.
+
+Jeder **Spieler** hat eine **Hand**.
+
+Bei jedem **Zug** hat der **Spieler** mehrere Möglichkeiten:
+
+```mermaid
+flowchart TD
+    hasToDraw{{Karten Ziehen?}}
+    canAvert{{Sieben Vorhanden?}}
+    avert(Spiele eine Sieben!)
+    drawMultiple(Ziehe Karten!)
+    canPlay{{"Passende Karte(n) vorhanden?"}}
+    canPlayLastChance{{"Passende Karte vorhanden?"}}
+    isWish{{Kann wünschen?}}
+    wish(Wünschen!)
+    drawOnce(Ziehe eine Karte!)
+    act("Lege Karte(n)!")
+    
+    hasToDraw -->|Ja| canAvert
+    hasToDraw -->|Nein| canPlay
+    canAvert -->|Ja| avert
+    canAvert -->|Nein| drawMultiple
+    drawMultiple --> canPlay
+    canPlay -->|Ja| act
+    canPlay -->|Nein| drawOnce
+    act --> isWish
+    isWish -->|Ja| wish
+    drawOnce --> canPlayLastChance
+    canPlayLastChance -->|Ja| act
+```
