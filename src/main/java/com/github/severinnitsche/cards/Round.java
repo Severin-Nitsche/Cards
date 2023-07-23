@@ -97,8 +97,14 @@ public class Round {
           deck.shuffle(source);
         }
       }
-      if (draws == 1 && !ActionValidator.fittingCard(recentInformation.hand(), stack.peek())) {
-        current = (current + 1) % players;
+      if (wish == null) {
+        if (draw.number() == 1 && !ActionValidator.fittingCard(recentInformation.hand(), stack.peek())) {
+          current = (current + 1) % players;
+        }
+      } else {
+        if (draw.number() == 1 && !ActionValidator.fittingCardWish(recentInformation.hand(), wish)) {
+          current = (current + 1) % players;
+        }
       }
       draws = 0;
       return true;
@@ -112,13 +118,22 @@ public class Round {
     if (action instanceof Action.Play play) {
       recentInformation.hand().play(play.card());
       stack.add(play.card());
+      if (play.card().type == Type.SEVEN) {
+        draws += 2;
+      }
       canWish = wish == null && play.card().type == Type.JACK;
+      if (play.card().type != Type.JACK) {
+        wish = null;
+      }
       if (!canWish) {
         if (play.card().type == Type.ACE) {
           current = (current + 2) % players;
         } else {
           current = (current + 1) % players;
         }
+      }
+      if (recentInformation.hand().cards() == 0) {
+        current = -1;
       }
       return true;
     }

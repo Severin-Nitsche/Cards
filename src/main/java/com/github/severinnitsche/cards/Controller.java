@@ -27,12 +27,12 @@ public class Controller {
    */
   public void nextRound() {
     if (current == null) {
-      current = new Round(source, game.players, game.round());
+      current = new Round(source, game.players, game.round() % game.players);
       return;
     }
     if (current.hasTerminated() && game.round() <= game.rounds) {
       game.setScores(current.scores());
-      current = new Round(source, game.players, game.round());
+      current = new Round(source, game.players, game.round() % game.players);
     }
   }
 
@@ -71,6 +71,17 @@ public class Controller {
    */
   public int scoreOf(int player) {
     return game.scoreOf(player);
+  }
+
+  /**
+   * @return an array of scores
+   */
+  public int[] scores() {
+    int[] scores = new int[game.players];
+    for (int i = 0; i < game.players; i++) {
+      scores[i] = game.scoreOf(i);
+    }
+    return scores;
   }
 
   /**

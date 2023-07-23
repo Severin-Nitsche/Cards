@@ -3,7 +3,7 @@ package com.github.severinnitsche.cards;
 public class ActionValidator {
 
   public static boolean validate(Action action, Information information) {
-    if (information.drawCards() > 0) {
+    if (information.drawCards() > 1) {
       boolean seven = false;
       for (Card card : information.hand()) {
         if (card.type == Type.SEVEN) {
@@ -26,8 +26,8 @@ public class ActionValidator {
     if (!information.canWish()) {
       boolean fitting = fittingCard(information.hand(), information.stack().peek());
       return (!fitting || ((action instanceof Action.Play play
-          && (play.card().color == information.stack().peek().color || play.card().type == information.stack().peek().type
-          || play.card().type == Type.JACK)
+          && (play.card().color == information.stack().peek().color
+          || play.card().type == information.stack().peek().type || play.card().type == Type.JACK)
           && information.hand().holds(play.card()))
           || (action instanceof Action.PlayRemaining && information.hand().onlyJacks())))
           && (fitting || (action instanceof Action.Draw draw && draw.number() == 1));
