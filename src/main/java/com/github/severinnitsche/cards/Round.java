@@ -113,7 +113,11 @@ public class Round {
       recentInformation.hand().play(play.card());
       canWish = wish == null && play.card().type == Type.JACK;
       if (!canWish) {
-        current = (current + 1) % players;
+        if (play.card().type == Type.ACE) {
+          current = (current + 2) % players;
+        } else {
+          current = (current + 1) % players;
+        }
       }
       return true;
     }
