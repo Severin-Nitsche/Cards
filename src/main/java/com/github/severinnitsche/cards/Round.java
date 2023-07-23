@@ -111,6 +111,7 @@ public class Round {
     }
     if (action instanceof Action.Play play) {
       recentInformation.hand().play(play.card());
+      stack.add(play.card());
       canWish = wish == null && play.card().type == Type.JACK;
       if (!canWish) {
         if (play.card().type == Type.ACE) {
