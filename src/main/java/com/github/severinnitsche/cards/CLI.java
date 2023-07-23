@@ -27,8 +27,39 @@ public class CLI {
     boolean status = false;
     String msg = "";
     Scanner input = new Scanner(System.in);
+    int lastPlayer = -1;
     while (!controller.hasGameTerminated()) {
       var info = controller.turnInfo();
+      if (lastPlayer != info.playerNumber()) {
+        System.out.printf("""
+            /==============================================================================\\
+            ||Runde % 3d/% 3d                                            Du bist Spieler % 3d||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                               Drücke Enter ↲                               ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            ||                                                                            ||
+            \\==============================================================================/""",
+            controller.round(), controller.rounds(), info.playerNumber() + 1);
+        input.nextLine();
+      }
+      lastPlayer = info.playerNumber();
       System.out.printf("""
           Runde % 3d/% 3d                                                Du bist Spieler % 3d
           
