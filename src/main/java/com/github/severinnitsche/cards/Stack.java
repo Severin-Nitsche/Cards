@@ -43,6 +43,14 @@ public class Stack {
   }
 
   /**
+   * Peek the first card of the stack
+   * @return the first card
+   */
+  public Card peek() {
+    return stack[topPtr-1];
+  }
+
+  /**
    * Add a card onto the stack
    * @param card the card to add
    */

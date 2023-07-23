@@ -59,6 +59,32 @@ public class Hand implements Iterable<Card> {
     return cards;
   }
 
+  /**
+   * Convenience method to determine whether a given card is held in the hand
+   * @param card the card to check
+   * @return whether the provided card is held
+   */
+  public boolean holds(Card card) {
+    for (Card hold : this) {
+      if (hold == card) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @return true, if there are only Jacks lefts, false otherwise
+   */
+  public boolean onlyJacks() {
+    for (Card hold : this) {
+      if (hold.type != Type.JACK) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @Override
   public Iterator<Card> iterator() {
     return new Iterator<Card>() {
