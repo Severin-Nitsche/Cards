@@ -19,6 +19,7 @@ public class Round {
 
   private int draws; // the number of cards to draw
   private Color wish; // the color of an active wish
+  private boolean canWish; // Is a wish possible?
 
   public Round(Random source, int players, int beginner) {
     this.source = source;
@@ -52,16 +53,56 @@ public class Round {
     for (int i = 0; i < players; i++) {
       numOfCards[i] = player[i].cards();
     }
-    return new Information(draws, wish, stack, player[current], numOfCards, current);
+    return new Information(draws, wish, stack, player[current], numOfCards, current, canWish);
   }
 
   /**
    * Applies the given action to the game.
    * @param action the chosen action
+   * @return whether the action was applied or not
    */
-  public void act(Action action) {
-    // TODO: Write Validator (externally)
-    // TODO: Apply action (locally)
+  public boolean act(Action action) {
+    Information recentInformation = info();
+    if (!ActionValidator.validate(action, recentInformation)) {
+      return false;
+    }
+    if (action instanceof Action.Draw draw) {
+      for (int i = 0; i < draw.number(); i++) {
+        recentInformation.hand().draw(deck.draw());
+        if (deck.cards() == 0) {
+          var temp = deck;
+          deck = stack;
+          stack = temp;
+          stack.add(deck.draw());
+          deck.shuffle(source);
+        }
+      }
+      if (draws == 1 && !ActionValidator.fittingCard(recentInformation.hand(), stack.peek())) {
+        current = (current + 1) % players;
+      }
+      draws = 0;
+      return true;
+    }
+    if (action instanceof Action.Wish wishAction) {
+      canWish = false;
+      wish = wishAction.color();
+      current = (current + 1) % players;
+      return true;
+    }
+    if (action instanceof Action.Play play) {
+      recentInformation.hand().play(play.card());
+      canWish = wish == null && play.card().type == Type.JACK;
+      if (!canWish) {
+        current = (current + 1) % players;
+      }
+      return true;
+    }
+    if (action instanceof Action.PlayRemaining) {
+      recentInformation.hand().removeAll();
+      current = -1;
+      return true;
+    }
+    throw new IllegalStateException("Did not expect action to be of type: "+action.getClass());
   }
 
 }

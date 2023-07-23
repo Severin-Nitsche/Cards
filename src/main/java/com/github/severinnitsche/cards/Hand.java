@@ -1,5 +1,6 @@
 package com.github.severinnitsche.cards;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -19,18 +20,27 @@ public class Hand implements Iterable<Card> {
   }
 
   /**
-   * Removes the card at the specified index and plays it
-   * @param index the index of the index
-   * @return the played index
+   * Removes the card
+   * @param card the card to play
    */
-  public Card play(int index) {
-    Card card = hand[index];
-    hand[index] = null;
-    if (card == null) {
-      throw new IllegalArgumentException("Cannot play nothing");
+  public void play(Card card) {
+    var iterator = iterator();
+    while (iterator.hasNext()) {
+      Card held = iterator.next();
+      if (held == card) {
+        iterator.remove();
+        return;
+      }
     }
-    cards--;
-    return card;
+    throw new IllegalArgumentException("Cannot play card: "+card);
+  }
+
+  /**
+   * Removes all cards from this hand
+   */
+  public void removeAll() {
+    Arrays.fill(hand, null);
+    this.cards = 0;
   }
 
   /**
