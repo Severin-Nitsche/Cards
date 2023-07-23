@@ -118,4 +118,16 @@ public class Hand implements Iterable<Card> {
       }
     };
   }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("[ ");
+    for (Card card : this) {
+      builder.append(card);
+      builder.append(" ");
+    }
+    builder.append("]");
+    return builder.toString();
+  }
 }

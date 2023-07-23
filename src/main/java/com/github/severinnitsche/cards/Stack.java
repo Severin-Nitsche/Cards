@@ -84,7 +84,7 @@ public class Stack {
     builder.append("[");
     for (int i = 0; i < topPtr - 1; i++) {
       builder.append(stack[i]);
-      builder.append(',');
+      builder.append(", ");
     }
     if (topPtr != 0) {
       builder.append(stack[topPtr-1]);

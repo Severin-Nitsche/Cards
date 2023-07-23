@@ -57,6 +57,26 @@ public class Round {
   }
 
   /**
+   * @return the scores for every player
+   */
+  public int[] scores() {
+    int[] scores = new int[players];
+    for (int i = 0; i < players; i++) {
+      for (Card card : player[i]) {
+        scores[i] += card.value;
+      }
+    }
+    return scores;
+  }
+
+  /**
+   * @return true, if this round has terminated, false otherwise
+   */
+  public boolean hasTerminated() {
+    return current == -1;
+  }
+
+  /**
    * Applies the given action to the game.
    * @param action the chosen action
    * @return whether the action was applied or not
