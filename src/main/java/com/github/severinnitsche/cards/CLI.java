@@ -25,66 +25,86 @@ public class CLI {
     Controller controller = new Controller(rounds, players, random);
     controller.nextRound();
     boolean status = false;
+    String msg = "";
     Scanner input = new Scanner(System.in);
     while (!controller.hasGameTerminated()) {
       var info = controller.turnInfo();
       System.out.printf("""
-          Runde % 3d/% 3d                                         Du bist Spieler % 3d
+          Runde % 3d/% 3d                                                Du bist Spieler % 3d
           
           Spielkarten: %s - Spielstand: %s
           
           Stapel: %s %s
           
-          [Entwicklerinformationen: %s]
+          Ziehe % 3d Karten
           
           Spielkarten: %s
           Meldung: %b
+          
+          %s
+          Farben: ♦️K, ♥️H, ♠️P, ♣️X            Werte: 7, 8, 9, 10,
+                                                    [B]ube, [D]ame, [K]önig, [A]ss
+                                                    
+          Karte Spielen:                         Wünschen:
+            Syntax: s [Farbe][Typ]                 Syntax: w [Farbe][Typ]
+            Beispiel: s h10 - spielt die ♥️10      Beispiel: w k - wünscht sich ♦️
+          
+          Karten Ziehen:                         Buben ablegen:
+            Syntax: z                              Syntax: e
+          
+          
           Eingabe:\s""",
           controller.round(), controller.rounds(), info.playerNumber() + 1,
           Arrays.toString(info.numberOfCards()), Arrays.toString(controller.scores()),
           info.stack().peek(), info.wish() == null ? "" : "Wunsch: "+info.wish(),
-          info,
+          info.drawCards(),
           info.hand(),
-          status);
+          status,
+          msg);
+      msg = "";
       String userInput = input.nextLine();
-      switch (userInput.charAt(0)) {
-        case 's' -> {
-          try {
-            Card card = Card.fromMnemonic(userInput.split(" ")[1]);
-            status = controller.apply(new Action.Play(card));
-          } catch (IllegalArgumentException err) {
-            System.err.println(err.getLocalizedMessage());
+      try {
+        switch (userInput.charAt(0)) {
+          case 's' -> {
+            try {
+              Card card = Card.fromMnemonic(userInput.split(" ")[1]);
+              status = controller.apply(new Action.Play(card));
+            } catch (IllegalArgumentException err) {
+              msg = err.getLocalizedMessage();
+              status = false;
+            }
+          }
+          case 'z' -> {
+            if (info.drawCards() == 0) {
+              status = controller.apply(new Action.Draw(1));
+            } else {
+              status = controller.apply(new Action.Draw(info.drawCards()));
+            }
+          }
+          case 'e' -> {
+            status = controller.apply(new Action.PlayRemaining());
+          }
+          case 'w' -> {
+            try {
+              status = controller.apply(new Action.Wish(switch (userInput.split(" ")[1].toLowerCase()) {
+                case "k", "♦️" -> Color.DIAMONDS;
+                case "h", "♥️" -> Color.HEART;
+                case "p", "♠️" -> Color.SPADES;
+                case "x", "♣️" -> Color.CLUBS;
+                default -> throw new IllegalStateException(
+                    "Unexpected value: " + userInput.split(" ")[1].toLowerCase());
+              }));
+            } catch (IllegalStateException err) {
+              msg = err.getLocalizedMessage();
+              status = false;
+            }
+          }
+          default -> {
             status = false;
           }
         }
-        case 'z' -> {
-          if (info.drawCards() == 0) {
-            status = controller.apply(new Action.Draw(1));
-          } else {
-            status = controller.apply(new Action.Draw(info.drawCards()));
-          }
-        }
-        case 'e' -> {
-          status = controller.apply(new Action.PlayRemaining());
-        }
-        case 'w' -> {
-          try {
-            status = controller.apply(new Action.Wish(switch (userInput.split(" ")[1].toLowerCase()) {
-              case "k", "♦️" -> Color.DIAMONDS;
-              case "h", "♥️" -> Color.HEART;
-              case "p", "♠️" -> Color.SPADES;
-              case "x", "♣️" -> Color.CLUBS;
-              default -> throw new IllegalStateException(
-                  "Unexpected value: " + userInput.split(" ")[1].toLowerCase());
-            }));
-          } catch (IllegalStateException err) {
-            System.err.println(err.getLocalizedMessage());
-            status = false;
-          }
-        }
-        default -> {
-          status = false;
-        }
+      } catch (Exception err) {
+        msg = err.getLocalizedMessage();
       }
       if (controller.hasRoundTerminated()) {
         controller.nextRound();
