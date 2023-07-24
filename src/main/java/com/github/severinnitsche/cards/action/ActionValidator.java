@@ -1,4 +1,10 @@
-package com.github.severinnitsche.cards;
+package com.github.severinnitsche.cards.action;
+
+import com.github.severinnitsche.cards.card.Hand;
+import com.github.severinnitsche.cards.controller.Information;
+import com.github.severinnitsche.cards.card.Card;
+import com.github.severinnitsche.cards.card.Color;
+import com.github.severinnitsche.cards.card.Type;
 
 public class ActionValidator {
 

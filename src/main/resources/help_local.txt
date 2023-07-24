@@ -1,0 +1,13 @@
+Das Spiel ist eine lokale Version von Mau Mau.
+Sie können Eingaben wie folgt vornehmen:
+ s [Karte] - Spielt die angegebene Karte aus
+ z - Zieht die notwendige Anzahl an Karten
+ e - Legt alle Buben ab
+ w [Farbe] - Wünscht die angegebene Farbe
+Dabei werden Karten wie folgt notiert:
+ [Karte] = [Farbe][Typ]
+Mit den Typen:                Und den Farben: (Auch als Emojis)
+  7 = Sieben    B = Bube       H = Herz   ♥️
+  8 = Acht      D = Dame       K = Karo   ♠️
+  9 = Neun      K = König      X = Kreuz  ♣️
+ 10 = Zehn      A = Ass        P = Pik    ♦️

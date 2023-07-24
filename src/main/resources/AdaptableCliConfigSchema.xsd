@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Note: The XML schema below was generated with the assistance of an AI-powered chatbot.
+  It is not the original work of the author of this XML file.
+  The schema is designed to define the structure and constraints of the configuration data.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="configuration">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="adoptables" type="AdoptablesType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="AdoptablesType">
+        <xs:sequence>
+            <xs:element name="register" type="RegisterType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RegisterType">
+        <xs:sequence>
+            <xs:element name="verb" type="xs:string"/>
+            <xs:element name="description" type="xs:string" minOccurs="0"/>
+            <xs:element name="options" type="OptionsType"/>
+            <xs:element name="class" type="xs:string"/>
+            <xs:element name="help" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OptionsType">
+        <xs:sequence>
+            <xs:element name="option" type="OptionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OptionType">
+        <xs:sequence>
+            <xs:element name="short" type="xs:string" minOccurs="0"/>
+            <xs:element name="long" type="xs:string"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="default" type="xs:string" minOccurs="0"/>
+            <xs:element name="help" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

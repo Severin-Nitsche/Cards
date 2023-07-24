@@ -1,4 +1,7 @@
-package com.github.severinnitsche.cards;
+package com.github.severinnitsche.cards.action;
+
+import com.github.severinnitsche.cards.card.Card;
+import com.github.severinnitsche.cards.card.Color;
 
 /**
  * This interface describes the single actions that might occur during a turn.

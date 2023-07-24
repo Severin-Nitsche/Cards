@@ -1,4 +1,4 @@
-package com.github.severinnitsche.cards;
+package com.github.severinnitsche.cards.card;
 
 /**
  * This enum represents the allowed Color values in a game of cards

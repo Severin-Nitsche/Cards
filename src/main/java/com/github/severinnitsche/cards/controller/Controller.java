@@ -1,4 +1,6 @@
-package com.github.severinnitsche.cards;
+package com.github.severinnitsche.cards.controller;
+
+import com.github.severinnitsche.cards.action.Action;
 
 import java.util.Random;
 

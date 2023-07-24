@@ -1,7 +1,7 @@
-package com.github.severinnitsche.cards;
+package com.github.severinnitsche.cards.card;
 
-import static com.github.severinnitsche.cards.Color.*;
-import static com.github.severinnitsche.cards.Type.*;
+import static com.github.severinnitsche.cards.card.Color.*;
+import static com.github.severinnitsche.cards.card.Type.*;
 
 /**
  * This enum contains all 32 cards in a deck with their respective values.

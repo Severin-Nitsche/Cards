@@ -1,4 +1,4 @@
-package com.github.severinnitsche.cards;
+package com.github.severinnitsche.cards.controller;
 
 /**
  * This class represents the game state of a card game that includes multiple rounds.

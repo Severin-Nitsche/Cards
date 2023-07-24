@@ -1,4 +1,4 @@
-package com.github.severinnitsche.cards;
+package com.github.severinnitsche.cards.card;
 
 import java.util.Arrays;
 import java.util.Iterator;
