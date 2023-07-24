@@ -30,7 +30,7 @@
                 </option>
             </options>
             <class>com.github.severinnitsche.cards.local.Session</class>
-            <help>/helpLocal</help>
+            <help>/help_local.txt</help>
         </register>
     </adoptables>
 </configuration>
