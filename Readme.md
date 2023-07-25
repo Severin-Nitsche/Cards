@@ -78,36 +78,48 @@ sequenceDiagram
     s-->>-c1: 1
     c2->>+s: id: Der_Wendler
     s-->>-c2: 2
-    par Karten an Client1 austeilen
-        s->>c1: deal: 🃏🎴...
-    and Karten an Client2 austeilen
-        s->>c2: deal: 🎴🃏...
-    end
-    loop Jeden Zug
-        par Spiel-Broadcast
-            s->>c1: draw: 0
-            s->>c1: wish: -
-            alt Falls notwendig
-                s->>c1: stack: 🎴
-            end
-            s->>c1: cards: [7,6]
-            s->>c1: player: 1
-            s->>+c1: time: -
-        and Spiel-Broadcast
-            s->>c2: draw: 0
-            s->>c2: wish: -
-            alt Falls notwendig
-                s->>c2: stack: 🎴
-            end
-            s->>c2: cards: [7,6]
-            s->>c2: player: 1
-            s->>c2: time: -
+    loop Jede Runde
+        par Rundenstart
+            s->>c1: round: 1/4
+        and Rundenstart
+            s->>c2: round: 1/4
         end
-        c1-->>-s: play: 🎴
-        par Spiel-Broadcast
-            s->>c1: play: 🎴
-        and Spiel-Broadcast
-            s->>c2: play: 🎴
+        par Karten an Client1 austeilen
+            s->>c1: deal: 🃏🎴...
+        and Karten an Client2 austeilen
+            s->>c2: deal: 🎴🃏...
+        end
+        loop Jeden Zug
+            par Spiel-Broadcast
+                s->>c1: draw: 0
+                s->>c1: wish: -
+                alt Falls notwendig
+                    s->>c1: stack: 🎴
+                end
+                s->>c1: cards: [7,6]
+                s->>c1: player: 1
+                s->>+c1: time: -
+            and Spiel-Broadcast
+                s->>c2: draw: 0
+                s->>c2: wish: -
+                alt Falls notwendig
+                    s->>c2: stack: 🎴
+                end
+                s->>c2: cards: [7,6]
+                s->>c2: player: 1
+                s->>c2: time: -
+            end
+            c1-->>-s: play: 🎴
+            par Spiel-Broadcast
+                s->>c1: play: 🎴
+            and Spiel-Broadcast
+                s->>c2: play: 🎴
+            end
+        end
+        par Ergebnis-Broadcast
+            s->>c1: result: [0,16] 
+        and Ergebnis-Broadcast
+            s->>c2: result: [0,16]
         end
     end
 ```
@@ -130,6 +142,8 @@ Dabei werden folgende Nachrichten versendet:
 | Client | Server    | wish   | `0x46` | Farbe      |
 | Server | Broadcast | play   | `0x70` | Karte      |
 | Server | Broadcast | take   | `0x71` | integer    |
+| Server | Broadcast | round  | `0x72` | integer^2  |
+| Server | Broadcast | result | `0x73` | \[integer] |
 
 - Strings werden `UTF-16` kodiert und `\0` terminiert.
 - Integer werden als `uint_8` versendet
