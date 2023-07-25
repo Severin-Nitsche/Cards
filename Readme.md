@@ -144,6 +144,7 @@ Dabei werden folgende Nachrichten versendet:
 | Server | Broadcast | take   | `0x71` | integer    |
 | Server | Broadcast | round  | `0x72` | integer^2  |
 | Server | Broadcast | result | `0x73` | \[integer] |
+| Server | Broadcast | yeet   | `0x74` | integer    |
 
 - Strings werden `UTF-16` kodiert und `\0` terminiert.
 - Integer werden als `uint_8` versendet
