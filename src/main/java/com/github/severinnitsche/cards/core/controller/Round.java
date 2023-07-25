@@ -1,12 +1,12 @@
-package com.github.severinnitsche.cards.controller;
+package com.github.severinnitsche.cards.core.controller;
 
-import com.github.severinnitsche.cards.card.Hand;
-import com.github.severinnitsche.cards.card.Stack;
-import com.github.severinnitsche.cards.action.Action;
-import com.github.severinnitsche.cards.action.ActionValidator;
-import com.github.severinnitsche.cards.card.Card;
-import com.github.severinnitsche.cards.card.Color;
-import com.github.severinnitsche.cards.card.Type;
+import com.github.severinnitsche.cards.core.card.Hand;
+import com.github.severinnitsche.cards.core.card.Stack;
+import com.github.severinnitsche.cards.core.action.Action;
+import com.github.severinnitsche.cards.core.action.ActionValidator;
+import com.github.severinnitsche.cards.core.card.Card;
+import com.github.severinnitsche.cards.core.card.Color;
+import com.github.severinnitsche.cards.core.card.Type;
 
 import java.util.Random;
 

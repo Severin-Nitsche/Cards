@@ -1,4 +1,4 @@
-package com.github.severinnitsche.cards.card;
+package com.github.severinnitsche.cards.core.card;
 
 public enum Type {
   SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE;

@@ -1,8 +1,8 @@
-package com.github.severinnitsche.cards.controller;
+package com.github.severinnitsche.cards.core.controller;
 
-import com.github.severinnitsche.cards.card.Color;
-import com.github.severinnitsche.cards.card.Hand;
-import com.github.severinnitsche.cards.card.Stack;
+import com.github.severinnitsche.cards.core.card.Color;
+import com.github.severinnitsche.cards.core.card.Hand;
+import com.github.severinnitsche.cards.core.card.Stack;
 
 /**
  * The information a player receives at every turn

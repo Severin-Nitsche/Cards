@@ -1,4 +1,4 @@
-package com.github.severinnitsche.cards.card;
+package com.github.severinnitsche.cards.core.card;
 
 import java.util.Random;
 

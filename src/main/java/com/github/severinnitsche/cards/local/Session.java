@@ -1,10 +1,10 @@
 package com.github.severinnitsche.cards.local;
 
-import com.github.severinnitsche.cards.action.Action;
-import com.github.severinnitsche.cards.card.Card;
-import com.github.severinnitsche.cards.card.Color;
+import com.github.severinnitsche.cards.core.action.Action;
+import com.github.severinnitsche.cards.core.card.Card;
+import com.github.severinnitsche.cards.core.card.Color;
 import com.github.severinnitsche.cards.cli.Adoptable;
-import com.github.severinnitsche.cards.controller.Controller;
+import com.github.severinnitsche.cards.core.controller.Controller;
 
 import java.util.Arrays;
 import java.util.Random;
