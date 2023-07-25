@@ -54,6 +54,15 @@ public class Round {
   }
 
   /**
+   * This method returns the hand of the given player
+   * @param player the player to get the hand of
+   * @return the player's hand
+   */
+  public Hand handOf(int player) {
+    return this.player[player];
+  }
+
+  /**
    * @return the information for the next player
    */
   public Information info() {

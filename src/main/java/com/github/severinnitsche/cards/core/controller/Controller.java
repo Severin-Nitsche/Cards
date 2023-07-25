@@ -1,6 +1,7 @@
 package com.github.severinnitsche.cards.core.controller;
 
 import com.github.severinnitsche.cards.core.action.Action;
+import com.github.severinnitsche.cards.core.card.Hand;
 
 import java.util.Random;
 
@@ -64,6 +65,15 @@ public class Controller {
    */
   public boolean hasGameTerminated() {
     return game.round() > game.rounds;
+  }
+
+  /**
+   * Get the cards of the specified player
+   * @param player the player
+   * @return their cards
+   */
+  public Hand handOf(int player) {
+    return current.handOf(player);
   }
 
   /**
