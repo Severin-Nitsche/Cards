@@ -6,7 +6,7 @@ Sie können Eingaben wie folgt vornehmen:
  w [Farbe] - Wünscht die angegebene Farbe
 Dabei werden Karten wie folgt notiert:
  [Karte] = [Farbe][Typ]
-Mit den Typen:                Und den Farben: (Auch als Emojis)
+Mit den Typen:                Und den Farben: (Auch als 😘)
   7 = Sieben    B = Bube       H = Herz   ♥️
   8 = Acht      D = Dame       K = Karo   ♠️
   9 = Neun      K = König      X = Kreuz  ♣️
