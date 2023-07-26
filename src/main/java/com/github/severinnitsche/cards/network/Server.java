@@ -74,7 +74,7 @@ public class Server implements Closeable {
     for (int i = 0; i < players; i++) {
       player[i].send(Message.SERVER_DEAL, controller.handOf(i));
     }
-    while (!controller.hasRoundTerminated()) {
+    while (!controller.hasRoundTerminated() && !controller.hasGameTerminated()) {
       nextTurn();
     }
   }

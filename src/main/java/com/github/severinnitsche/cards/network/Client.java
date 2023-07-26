@@ -38,7 +38,6 @@ public class Client implements Closeable, Controller {
     this.identifier = identifier;
     this.socket = new Socket(host, port);
     this.connection = new NetworkUtility(socket.getInputStream(), socket.getOutputStream());
-    this.stack = new Stack(32);
   }
 
   public void id() throws IOException {
@@ -63,6 +62,9 @@ public class Client implements Closeable, Controller {
       this.round = rnd[0];
       this.rounds = rnd[1];
       this.hand = new Hand();
+      this.stack = new Stack(32);
+      wishInProgress = false;
+      canWish = false;
       var cards = connection.receiveCards(SERVER_DEAL);
       for (Card card : cards) {
         hand.draw(card);
@@ -170,7 +172,9 @@ public class Client implements Closeable, Controller {
         if (connection.peek() == SERVER_DEAL) {
           var cards = connection.receiveCards(SERVER_DEAL);
           for (var card : cards) {
-            hand.draw(card);
+            if (!hand.holds(card)) {
+              hand.draw(card);
+            }
           }
         }
       } catch (IOException e) {
