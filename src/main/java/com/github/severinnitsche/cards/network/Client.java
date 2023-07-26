@@ -167,8 +167,11 @@ public class Client implements Closeable, Controller {
       // Ignore, round ends
     } else if (act instanceof Action.Draw draw) {
       try {
-        while (connection.peek() == SERVER_DEAL) {
-          hand.draw(connection.receiveCard(SERVER_DEAL));
+        if (connection.peek() == SERVER_DEAL) {
+          var cards = connection.receiveCards(SERVER_DEAL);
+          for (var card : cards) {
+            hand.draw(card);
+          }
         }
       } catch (IOException e) {
         throw new RuntimeException(e);
