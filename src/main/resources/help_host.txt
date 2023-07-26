@@ -1,0 +1,2 @@
+Der Gerät hostet Mau-Mau online entsprechend der Spezifikation:
+https://github.com/Severin-Nitsche/Cards

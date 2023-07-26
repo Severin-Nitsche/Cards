@@ -32,5 +32,39 @@
             <class>com.github.severinnitsche.cards.local.Session</class>
             <help>/help_local.txt</help>
         </register>
+        <register>
+            <verb>host</verb>
+            <description>Online Spiel hosten</description>
+            <options>
+                <option>
+                    <short>r</short>
+                    <long>runden</long>
+                    <type>int</type>
+                    <default>1</default>
+                    <help>Die Anzahl der Runden</help>
+                </option>
+                <option>
+                    <short>s</short>
+                    <long>spieler</long>
+                    <type>int</type>
+                    <default>2</default>
+                    <help>Die Anzahl der Spieler</help>
+                </option>
+                <option>
+                    <long>seed</long>
+                    <type>long</type>
+                    <default>0</default>
+                    <help>Der seed für den RNG (0 ist zufällig)</help>
+                </option>
+                <option>
+                    <short>p</short>
+                    <long>port</long>
+                    <type>int</type>
+                    <default>53427</default>
+                </option>
+            </options>
+            <class>com.github.severinnitsche.cards.network.Host</class>
+            <help>/help_host.txt</help>
+        </register>
     </adoptables>
 </configuration>

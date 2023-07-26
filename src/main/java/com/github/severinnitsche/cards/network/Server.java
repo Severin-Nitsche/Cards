@@ -1,13 +1,14 @@
 package com.github.severinnitsche.cards.network;
 
+import com.github.severinnitsche.cards.core.action.Action;
 import com.github.severinnitsche.cards.core.card.Card;
 import com.github.severinnitsche.cards.core.controller.Controller;
+import com.github.severinnitsche.cards.core.controller.Information;
 
 import javax.net.ServerSocketFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Random;
 
 /**
@@ -21,7 +22,7 @@ public class Server implements Closeable {
   private final int players;
 
   private String[] identifiers;
-  private Socket[] player;
+  private NetworkUtility[] player;
 
   public Server(int rounds, int players, long seed, int port) throws IOException {
     if (seed == 0) {
@@ -31,32 +32,20 @@ public class Server implements Closeable {
     }
     this.listener = ServerSocketFactory.getDefault().createServerSocket(port);
     this.identifiers = new String[players];
-    this.player = new Socket[players];
+    this.player = new NetworkUtility[players];
     this.players = players;
   }
 
   /**
    * This method waits for all players to connect.
    * This is a blocking operation.
-   * @return whether the connections were successful
    */
-  public boolean start() throws IOException {
+  public void start() throws IOException {
     for (int i = 0; i < players; i++) {
-      player[i] = listener.accept();
-      StringBuilder idBuilder = new StringBuilder();
-      int c1 = player[i].getInputStream().read();
-      int c2 = player[i].getInputStream().read();
-      while (c1 != 0 && c2 != 0 && c1 != -1) {
-        idBuilder.append((char) (c1 << 8 | c2));
-        c1 = player[i].getInputStream().read();
-        c2 = player[i].getInputStream().read();
-      }
-      identifiers[i] = idBuilder.toString();
-      if (c1 == -1) {
-        return false;
-      }
+      var socket = listener.accept();
+      player[i] = new NetworkUtility(socket.getInputStream(), socket.getOutputStream());
+      identifiers[i] = player[i].receiveString(Message.CLIENT_ID);
     }
-    return true;
   }
 
   /**
@@ -66,14 +55,7 @@ public class Server implements Closeable {
     while (!controller.hasGameTerminated()) {
       nextRound();
       for (int i = 0; i < players; i++) {
-        var out = player[i].getOutputStream();
-        out.write(Message.SERVER_RESULT.code);
-        out.write(controller.scoreOf(0));
-        for (int j = 1; j < players; j++) {
-          out.write(Message.DELIMITER);
-          out.write(controller.scoreOf(j));
-        }
-        out.write(Message.TERMINATOR);
+        player[i].send(Message.SERVER_RESULT, controller.scores());
       }
     }
   }
@@ -84,27 +66,60 @@ public class Server implements Closeable {
   private void nextRound() throws IOException {
     controller.nextRound();
     for (int i = 0; i < players; i++) {
-      var out = player[i].getOutputStream();
-      out.write(Message.SERVER_ROUND.code);
-      out.write(controller.round());
-      out.write(controller.rounds());
+      player[i].send(Message.SERVER_ROUND, controller.round(), controller.rounds());
     }
     for (int i = 0; i < players; i++) {
-      var out = player[i].getOutputStream();
-      for (Card card : controller.handOf(i)) {
-        out.write(Message.SERVER_DEAL.code);
-        out.write(NetworkCardUtility.code(card.color));
-        out.write(NetworkCardUtility.code(card.type));
-      }
+      player[i].send(Message.SERVER_DEAL, controller.handOf(i));
     }
-    nextTurn();
+    while (!controller.hasRoundTerminated()) {
+      nextTurn();
+    }
   }
 
   /**
    * This method manages the next turn
    */
-  private void nextTurn() {
-
+  private void nextTurn() throws IOException {
+    Information info = controller.turnInfo();
+    for (int i = 0; i < players; i++) {
+      player[i].send(Message.SERVER_DRAW, info.drawCards());
+      player[i].send(Message.SERVER_WISH, info.wish());
+      if (info.stack().cards() == 1) {
+        player[i].send(Message.SERVER_STACK, info.stack().peek());
+      }
+      player[i].send(Message.SERVER_CARDS, info.numberOfCards());
+      player[i].send(Message.SERVER_PLAYER, info.playerNumber());
+      player[i].send(Message.SERVER_TIME, 0);
+    }
+    Action action = player[info.playerNumber()].receiveAction();
+    boolean success = controller.apply(action);
+    if (!success) {
+      for (int i = 0; i < players; i++) {
+        player[i].send(Message.SERVER_YEET, info.playerNumber());
+      }
+      // TODO: Yeet the player of the game internally
+    } else {
+      if (action instanceof Action.Play play) {
+        for (int i = 0; i < players; i++) {
+          player[i].send(Message.SERVER_PLAY, play.card());
+        }
+      } else if (action instanceof Action.Draw draw) {
+        for (int i = 0; i < players; i++) {
+          player[i].send(Message.SERVER_DRAW, draw.number());
+        }
+        player[info.playerNumber()].send(Message.SERVER_DEAL, info.hand());
+      } else if (action instanceof Action.PlayRemaining) {
+        for (Card card : info.hand()) {
+          for (int i = 0; i < players; i++) {
+            player[i].send(Message.SERVER_PLAY, card);
+          }
+        }
+      } else if (action instanceof Action.Wish wish) {
+        for (int i = 0; i < players; i++) {
+          player[i].send(Message.SERVER_WISH, wish.color());
+        }
+      }
+    }
   }
 
   @Override
