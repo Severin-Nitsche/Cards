@@ -4,6 +4,7 @@ import com.github.severinnitsche.cards.core.action.Action;
 import com.github.severinnitsche.cards.core.card.*;
 import com.github.severinnitsche.cards.core.controller.Controller;
 import com.github.severinnitsche.cards.core.controller.Information;
+import com.github.severinnitsche.cards.network.utility.NetworkCardUtility;
 import com.github.severinnitsche.cards.network.utility.NetworkUtility;
 
 import java.io.Closeable;
@@ -125,6 +126,10 @@ public class Client implements Closeable, Controller {
   public boolean apply(Action action) {
     try {
       connection.sendClientAction(action);
+      if (connection.peek() == SERVER_YEET) {
+        connection.receiveInt();
+        return false;
+      }
       var act = connection.receiveServerAction();
       if (act.equals(action)) {
         applyLocal(act);
@@ -161,6 +166,13 @@ public class Client implements Closeable, Controller {
     } else if (act instanceof Action.PlayRemaining) {
       // Ignore, round ends
     } else if (act instanceof Action.Draw draw) {
+      try {
+        while (connection.peek() == SERVER_DEAL) {
+          hand.draw(connection.receiveCard(SERVER_DEAL));
+        }
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
       // Ignore card numbers are updated next turn
     }
   }
