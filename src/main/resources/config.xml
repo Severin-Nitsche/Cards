@@ -69,7 +69,7 @@
         </register>
         <register>
             <verb>client</verb>
-            <description>Online Spiel hosten</description>
+            <description>Online Spiel spielen</description>
             <options>
                 <option>
                     <short>i</short>
