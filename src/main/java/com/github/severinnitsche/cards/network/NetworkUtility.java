@@ -53,7 +53,11 @@ public class NetworkUtility {
    */
   public void send(int type, Color value) throws IOException {
     out.write(type);
-    out.write(NetworkCardUtility.code(value));
+    if (value == null) {
+      out.write(0x00);
+    } else {
+      out.write(NetworkCardUtility.code(value));
+    }
   }
 
   /**
