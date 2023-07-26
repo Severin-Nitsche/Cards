@@ -10,6 +10,7 @@ import javax.net.ServerSocketFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -57,6 +58,7 @@ public class Server implements Closeable {
   public void play() throws IOException {
     while (!controller.hasGameTerminated()) {
       nextRound();
+      System.out.println(Arrays.toString(controller.scores()));
       for (int i = 0; i < players; i++) {
         player[i].send(Message.SERVER_RESULT, controller.scores());
       }

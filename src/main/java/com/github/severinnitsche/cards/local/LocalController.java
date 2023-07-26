@@ -14,7 +14,7 @@ public class LocalController implements Controller {
   private Game game;
   private Round current;
   private Random source;
-
+  private boolean applied;
 
   public LocalController(int rounds, int players, Random source) {
     this.game = new Game(rounds, players);
@@ -32,15 +32,25 @@ public class LocalController implements Controller {
       current = new Round(source, game.players, game.round() % game.players);
       return;
     }
-    if (current.hasTerminated() && game.round() <= game.rounds) {
-      game.setScores(current.scores());
+    if (hasRoundTerminated() && game.round() <= game.rounds) {
+      applied = false;
       current = new Round(source, game.players, game.round() % game.players);
     }
   }
 
   @Override
   public boolean hasRoundTerminated() {
-    return current == null || current.hasTerminated();
+    if (current == null) {
+      return true;
+    }
+    if (current.hasTerminated()) {
+      if (!applied) {
+        game.setScores(current.scores());
+        applied = true;
+      }
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -65,6 +75,7 @@ public class LocalController implements Controller {
 
   @Override
   public int scoreOf(int player) {
+    hasRoundTerminated(); // update scores
     return game.scoreOf(player);
   }
 
