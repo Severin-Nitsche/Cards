@@ -69,7 +69,7 @@ public class CLI {
         }
         Optional<Option> option = adoptable.options.stream()
             .filter(candidate ->
-                candidate.longName.equalsIgnoreCase(simpleArg))
+                candidate.longName.equalsIgnoreCase(simpleArg) || candidate.shortName.equalsIgnoreCase(simpleArg))
             .findAny();
         if (option.isEmpty()) {
           System.err.println("Could not find option: "+args[i]);
