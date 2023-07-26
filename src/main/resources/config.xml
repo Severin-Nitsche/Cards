@@ -74,18 +74,18 @@
                 <option>
                     <short>i</short>
                     <long>id</long>
-                    <type>String</type>
+                    <type>string</type>
                     <help>Der Nickname</help>
                 </option>
                 <option>
-                    <short>h</short>
                     <long>host</long>
-                    <type>String</type>
+                    <type>string</type>
                     <help>Der Server</help>
                 </option>
                 <option>
-                    <long>p</long>
-                    <type>port</type>
+                    <short>p</short>
+                    <long>port</long>
+                    <type>int</type>
                     <default>53427</default>
                     <help>Der Port des Servers</help>
                 </option>
