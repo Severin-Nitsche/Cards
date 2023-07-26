@@ -1,6 +1,7 @@
-package com.github.severinnitsche.cards.network;
+package com.github.severinnitsche.cards.network.cli;
 
 import com.github.severinnitsche.cards.cli.Adoptable;
+import com.github.severinnitsche.cards.network.Server;
 
 import java.io.IOException;
 

@@ -16,7 +16,7 @@ public enum Message {
   public static final int SERVER_PLAYER = 0x6e;
   public static final int SERVER_TIME = 0x6f;
   public static final int SERVER_PLAY = 0x70;
-  // public static final int SERVER_TAKE = 0x71;
+  public static final int SERVER_FINISH = 0x71;
   public static final int SERVER_ROUND = 0x72;
   public static final int SERVER_RESULT = 0x73;
   public static final int SERVER_YEET = 0x74;

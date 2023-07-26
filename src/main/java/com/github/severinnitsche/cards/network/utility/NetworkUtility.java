@@ -1,10 +1,12 @@
-package com.github.severinnitsche.cards.network;
+package com.github.severinnitsche.cards.network.utility;
 
 import com.github.severinnitsche.cards.core.action.Action;
 import com.github.severinnitsche.cards.core.card.Card;
 import com.github.severinnitsche.cards.core.card.Color;
 import com.github.severinnitsche.cards.core.card.Type;
+import com.github.severinnitsche.cards.network.Message;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,12 +17,24 @@ import java.util.ArrayList;
  */
 public class NetworkUtility {
 
-  private InputStream in;
+  private BufferedInputStream in;
   private OutputStream out;
 
   public NetworkUtility(InputStream in, OutputStream out) {
-    this.in = in;
+    this.in = new BufferedInputStream(in);
     this.out = out;
+  }
+
+  /**
+   * Peeks the stream
+   * @return a peek at the next byte
+   * @throws IOException
+   */
+  public int peek() throws IOException {
+    in.mark(2);
+    int peek = in.read();
+    in.reset();
+    return peek;
   }
 
   /**
@@ -106,6 +120,23 @@ public class NetworkUtility {
    * @param type the message type (byte)
    * @param value the message value
    */
+  public void send(int type, long value) throws IOException {
+    out.write(type);
+    out.write((int) (value >>> 56));
+    out.write((int) (value >>> 48));
+    out.write((int) (value >>> 40));
+    out.write((int) (value >>> 32));
+    out.write((int) (value >>> 24));
+    out.write((int) (value >>> 16));
+    out.write((int) (value >>> 8));
+    out.write((int) (value));
+  }
+
+  /**
+   * Send a message with the specified type and value
+   * @param type the message type (byte)
+   * @param value the message value
+   */
   public void send(int type, int value) throws IOException {
     out.write(type);
     out.write(value);
@@ -136,6 +167,21 @@ public class NetworkUtility {
       out.write(value[i]);
     }
     out.write(Message.TERMINATOR);
+  }
+
+  /**
+   * Send an action
+   */
+  public void sendClientAction(Action action) throws IOException {
+    if (action instanceof Action.Wish wish) {
+      send(Message.CLIENT_WISH, wish.color());
+    } else if (action instanceof Action.Play play) {
+      send(Message.CLIENT_PLAY, play.card());
+    } else if (action instanceof Action.Draw draw) {
+      send(Message.CLIENT_TAKE, draw.number());
+    } else if (action instanceof Action.PlayRemaining) {
+      send(Message.CLIENT_FINISH);
+    }
   }
 
   /**
@@ -200,6 +246,20 @@ public class NetworkUtility {
       cards.add(NetworkCardUtility.card(in.read(), in.read()));
     } while(in.read() == Message.DELIMITER);
     return cards;
+  }
+
+  /**
+   * Receive a message with the specified type
+   * @param type the message type (byte)
+   */
+  public long receiveLong(int type) throws IOException {
+    int rt = in.read();
+    if (rt != type) {
+      throw new IllegalStateException("Expected "+type+" but got "+rt);
+    }
+    return ((long)in.read() << 56) | ((long)in.read() << 48) | ((long)in.read() << 40)
+        | ((long)in.read() << 32) | ((long)in.read() << 24) | ((long)in.read() << 16)
+        | ((long)in.read() << 8) | ((long)in.read());
   }
 
   /**
@@ -292,6 +352,15 @@ public class NetworkUtility {
   /**
    * Receive a message
    */
+  public long receiveLong() throws IOException {
+    return ((long)in.read() << 56) | ((long)in.read() << 48) | ((long)in.read() << 40)
+        | ((long)in.read() << 32) | ((long)in.read() << 24) | ((long)in.read() << 16)
+        | ((long)in.read() << 8) | ((long)in.read());
+  }
+
+  /**
+   * Receive a message
+   */
   public int receiveInt() throws IOException {
     return in.read();
   }
@@ -317,13 +386,27 @@ public class NetworkUtility {
   /**
    * Receive an action
    */
-  public Action receiveAction() throws IOException {
+  public Action receiveClientAction() throws IOException {
     var read = in.read();
     return switch (read) {
       case Message.CLIENT_PLAY -> new Action.Play(receiveCard());
       case Message.CLIENT_TAKE -> new Action.Draw(receiveInt());
       case Message.CLIENT_WISH -> new Action.Wish(receiveColor());
       case Message.CLIENT_FINISH -> new Action.PlayRemaining();
+      default -> throw new IllegalStateException("Expected action but got: "+read);
+    };
+  }
+
+  /**
+   * Receive an action
+   */
+  public Action receiveServerAction() throws IOException {
+    var read = in.read();
+    return switch (read) {
+      case Message.SERVER_PLAY -> new Action.Play(receiveCard());
+      case Message.SERVER_DRAW -> new Action.Draw(receiveInt());
+      case Message.SERVER_WISH -> new Action.Wish(receiveColor());
+      case Message.SERVER_FINISH -> new Action.PlayRemaining();
       default -> throw new IllegalStateException("Expected action but got: "+read);
     };
   }

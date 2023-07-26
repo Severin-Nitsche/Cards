@@ -1,4 +1,4 @@
-package com.github.severinnitsche.cards.network;
+package com.github.severinnitsche.cards.network.utility;
 
 import com.github.severinnitsche.cards.core.card.Card;
 import com.github.severinnitsche.cards.core.card.Color;
@@ -15,6 +15,9 @@ public class NetworkCardUtility {
    * @return the corresponding code
    */
   public static int code(Color color) {
+    if (color == null) {
+      return 0x00;
+    }
     return switch (color) {
       case DIAMONDS -> 0x31;
       case HEART -> 0x41;
@@ -34,6 +37,7 @@ public class NetworkCardUtility {
       case 0x41 -> Color.HEART;
       case 0x15 -> Color.CLUBS;
       case 0x92 -> Color.SPADES;
+      case 0x00 -> null;
       default -> throw new IllegalArgumentException("Unknown code: "+code);
     };
   }

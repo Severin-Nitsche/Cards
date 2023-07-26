@@ -126,25 +126,25 @@ sequenceDiagram
 
 Dabei werden folgende Nachrichten versendet:
 
-| Sender     | Empfänger     | Typ      | Hex        | Werte       |
-|------------|---------------|----------|------------|-------------|
-| Client     | Server        | id       | `0x42`     | String      |
-| Server     | Client        | deal     | `0x69`     | \[Karte]    |
-| Server     | Broadcast     | draw     | `0x6A`     | integer     |
-| Server     | Broadcast     | wish     | `0x6B`     | Farbe       |
-| Server     | Broadcast     | stack    | `0x6C`     | Karte       |
-| Server     | Broadcast     | cards    | `0x6D`     | \[integer]  |
-| Server     | Broadcast     | player   | `0x6E`     | integer     |
-| Server     | Broadcast     | time     | `0x6F`     | long        |
-| Client     | Server        | play     | `0x43`     | Karte       |
-| Client     | Server        | take     | `0x44`     | integer     |
-| Client     | Server        | finish   | `0x45`     | N/A         |
-| Client     | Server        | wish     | `0x46`     | Farbe       |
-| Server     | Broadcast     | play     | `0x70`     | Karte       |
-| ~~Server~~ | ~~Broadcast~~ | ~~take~~ | ~~`0x71`~~ | ~~integer~~ |
-| Server     | Broadcast     | round    | `0x72`     | integer^2   |
-| Server     | Broadcast     | result   | `0x73`     | \[integer]  |
-| Server     | Broadcast     | yeet     | `0x74`     | integer     |
+| Sender | Empfänger | Typ    | Hex    | Werte      |
+|--------|-----------|--------|--------|------------|
+| Client | Server    | id     | `0x42` | String     |
+| Server | Client    | deal   | `0x69` | \[Karte]   |
+| Server | Broadcast | draw   | `0x6A` | integer    |
+| Server | Broadcast | wish   | `0x6B` | Farbe      |
+| Server | Broadcast | stack  | `0x6C` | Karte      |
+| Server | Broadcast | cards  | `0x6D` | \[integer] |
+| Server | Broadcast | player | `0x6E` | integer    |
+| Server | Broadcast | time   | `0x6F` | long       |
+| Client | Server    | play   | `0x43` | Karte      |
+| Client | Server    | take   | `0x44` | integer    |
+| Client | Server    | finish | `0x45` | N/A        |
+| Client | Server    | wish   | `0x46` | Farbe      |
+| Server | Broadcast | play   | `0x70` | Karte      |
+| Server | Broadcast | finish | `0x71` | N/A        |
+| Server | Broadcast | round  | `0x72` | integer^2  |
+| Server | Broadcast | result | `0x73` | \[integer] |
+| Server | Broadcast | yeet   | `0x74` | integer    |
 
 - Strings werden `UTF-16` kodiert und `\0` terminiert.
 - Integer werden als `uint_8` versendet

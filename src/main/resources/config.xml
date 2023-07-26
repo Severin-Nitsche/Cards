@@ -29,7 +29,7 @@
                     <help>Der seed für den RNG (0 ist zufällig)</help>
                 </option>
             </options>
-            <class>com.github.severinnitsche.cards.local.Session</class>
+            <class>com.github.severinnitsche.cards.local.Local</class>
             <help>/help_local.txt</help>
         </register>
         <register>
@@ -61,10 +61,37 @@
                     <long>port</long>
                     <type>int</type>
                     <default>53427</default>
+                    <help>Der Port des Servers</help>
                 </option>
             </options>
-            <class>com.github.severinnitsche.cards.network.Host</class>
+            <class>com.github.severinnitsche.cards.network.cli.Host</class>
             <help>/help_host.txt</help>
+        </register>
+        <register>
+            <verb>host</verb>
+            <description>Online Spiel hosten</description>
+            <options>
+                <option>
+                    <short>i</short>
+                    <long>id</long>
+                    <type>String</type>
+                    <help>Der Nickname</help>
+                </option>
+                <option>
+                    <short>h</short>
+                    <long>host</long>
+                    <type>String</type>
+                    <help>Der Server</help>
+                </option>
+                <option>
+                    <long>p</long>
+                    <type>port</type>
+                    <default>53427</default>
+                    <help>Der Port des Servers</help>
+                </option>
+            </options>
+            <class>com.github.severinnitsche.cards.network.cli.Client</class>
+            <help>/help_local.txt</help>
         </register>
     </adoptables>
 </configuration>

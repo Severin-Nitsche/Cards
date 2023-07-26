@@ -1,9 +1,10 @@
 package com.github.severinnitsche.cards.network;
 
 import com.github.severinnitsche.cards.core.action.Action;
-import com.github.severinnitsche.cards.core.card.Card;
 import com.github.severinnitsche.cards.core.controller.Controller;
 import com.github.severinnitsche.cards.core.controller.Information;
+import com.github.severinnitsche.cards.local.LocalController;
+import com.github.severinnitsche.cards.network.utility.NetworkUtility;
 
 import javax.net.ServerSocketFactory;
 import java.io.Closeable;
@@ -26,9 +27,9 @@ public class Server implements Closeable {
 
   public Server(int rounds, int players, long seed, int port) throws IOException {
     if (seed == 0) {
-      this.controller = new Controller(rounds, players, new Random());
+      this.controller = new LocalController(rounds, players, new Random());
     } else {
-      this.controller = new Controller(rounds, players, new Random(seed));
+      this.controller = new LocalController(rounds, players, new Random(seed));
     }
     this.listener = ServerSocketFactory.getDefault().createServerSocket(port);
     this.identifiers = new String[players];
@@ -91,9 +92,9 @@ public class Server implements Closeable {
       }
       player[i].send(Message.SERVER_CARDS, info.numberOfCards());
       player[i].send(Message.SERVER_PLAYER, info.playerNumber());
-      player[i].send(Message.SERVER_TIME, 0);
+      player[i].send(Message.SERVER_TIME, 0L);
     }
-    Action action = player[info.playerNumber()].receiveAction();
+    Action action = player[info.playerNumber()].receiveClientAction();
     boolean success = controller.apply(action);
     if (!success) {
       for (int i = 0; i < players; i++) {
@@ -111,10 +112,8 @@ public class Server implements Closeable {
         }
         player[info.playerNumber()].send(Message.SERVER_DEAL, info.hand());
       } else if (action instanceof Action.PlayRemaining) {
-        for (Card card : info.hand()) {
-          for (int i = 0; i < players; i++) {
-            player[i].send(Message.SERVER_PLAY, card);
-          }
+        for (int i = 0; i < players; i++) {
+          player[i].send(Message.SERVER_FINISH);
         }
       } else if (action instanceof Action.Wish wish) {
         for (int i = 0; i < players; i++) {
