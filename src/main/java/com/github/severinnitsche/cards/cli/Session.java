@@ -137,7 +137,9 @@ public class Session {
         System.out.println(act);
       }
       if (controller.hasRoundTerminated()) {
-        controller.nextRound();
+        if (!controller.hasGameTerminated()) {
+          controller.nextRound();
+        }
       }
     }
     System.out.println(Arrays.toString(controller.scores()));
