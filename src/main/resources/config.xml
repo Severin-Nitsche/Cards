@@ -68,7 +68,7 @@
             <help>/help_host.txt</help>
         </register>
         <register>
-            <verb>host</verb>
+            <verb>client</verb>
             <description>Online Spiel hosten</description>
             <options>
                 <option>
