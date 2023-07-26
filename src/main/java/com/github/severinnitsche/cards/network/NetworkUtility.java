@@ -143,15 +143,7 @@ public class NetworkUtility {
     if (rt != type) {
       throw new IllegalStateException("Expected "+type+" but got "+rt);
     }
-    StringBuilder stringer = new StringBuilder();
-    int c1 = in.read();
-    int c2 = in.read();
-    while (c1 != 0 && c2 != 0 && c1 != -1) {
-      stringer.append((char) (c1 << 8 | c2));
-      c1 = in.read();
-      c2 = in.read();
-    }
-    return stringer.toString();
+    return receiveString();
   }
 
   /**
@@ -253,7 +245,7 @@ public class NetworkUtility {
     StringBuilder stringer = new StringBuilder();
     int c1 = in.read();
     int c2 = in.read();
-    while (c1 != 0 && c2 != 0 && c1 != -1) {
+    while (((c1 | c2) != 0) && c1 != -1) {
       stringer.append((char) (c1 << 8 | c2));
       c1 = in.read();
       c2 = in.read();
