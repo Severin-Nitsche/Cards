@@ -41,6 +41,7 @@ public class Client implements Closeable, Controller {
   }
 
   public void id() throws IOException {
+    System.out.println("Identifying as "+identifier);
     connection.send(CLIENT_ID, identifier);
     player = connection.receiveInt();
   }
@@ -57,7 +58,7 @@ public class Client implements Closeable, Controller {
         return;
       }
       roundTerminus = false;
-      int[] rnd = connection.receiveInts(SERVER_ROUND);
+      int[] rnd = connection.receiveIntX2(SERVER_ROUND);
       this.round = rnd[0];
       this.rounds = rnd[1];
       this.hand = new Hand();
