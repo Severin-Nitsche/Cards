@@ -45,6 +45,8 @@ public class Server implements Closeable {
       var socket = listener.accept();
       player[i] = new NetworkUtility(socket.getInputStream(), socket.getOutputStream());
       identifiers[i] = player[i].receiveString(Message.CLIENT_ID);
+      System.out.println(identifiers[i]+" joined the game!");
+      player[i].send(i);
     }
   }
 
