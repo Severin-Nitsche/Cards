@@ -1,17 +1,38 @@
-# Karten
+# Mau-Mau
 
-Um genau zu sein Mau-Mau. Nach den einzig wahren Spielregeln:
- - **7** ist zwei ziehen
- - **Ass** bedeutet aussetzen
- - **Bube** bedeutet wünschen
+## Spielregeln
 
-Das Ziehen kann akkumuliert werden, Bube bedient, Wünschen auf Wünschen stinkt, wer legen kann, der muss ziehen,
-wer nicht kann, der muss eine Karte ziehen, auch nachdem er Strafziehungen wegen einer Sieben hatte,
-und nach diesen Ziehungen wird **nicht** ausgesetzt. Außerdem kann mit mehreren Buben vorzeitig Schluss gemacht werden.
+### Grundregeln
+Mau-Mau ist ein Auslegespiel.
+Gewonnen hat, wer zuerst alle seine Karten abgespielt hat.
+Am Ende werden die [Punkte](#punkte) der Restkarten gezählt.
 
-Ansonsten wird Farbe auf Farbe und Wert auf Wert gelegt.
-Gespielt wird mit einem 32-er-Set, also 7, 8, 9, 10, Bube, Dame, König, Ass.
+Zu Beginn erhält jeder Spieler sechs Karten.
+Der erste Spieler erhält sieben.
+Die restlichen Karten werden verdeckt als Stapel abgelegt.
+Die erste Karte des Stapels wird neben diesem aufgedeckt.
 
+Reihum legt jeder Spieler, sofern möglich, eine seiner Karten offen auf die nebenliegende Karte.
+Möglich ist dies, wenn die abzulegende Karte in Wert oder Farbe mit der obersten offenen Karte übereinstimmt.
+Kann ein Spieler keine Karte ablegen, so muss er eine Karte vom Stapel ziehen.
+Danach ist der nächste Spieler an der Reihe.
+Sobald sich keine Karten mehr im Stapel befinden wird aus den offenen Karten, abzüglich der obersten,
+ein neuer Stapel gebildet.
+
+### Weitere Regeln
+- Wer eine passende Karte zieht, darf diese ablegen.
+- Wird eine Sieben gelegt, so muss die nächste Person zwei Karten ziehen.
+  - Kann die nächste Person allerdings auch eine Sieben legen, muss deren Nachfolger vier Karten ziehen, usw.
+  - Hat der letzte Spieler in dieser Reihe seine Karten aufgenommen, so beginnt dessen Zug ganz normal.
+- Wird ein Ass gelegt, so muss der nächste Spieler aussetzen.
+- Ein Bube kann auf alle Karten gespielt werden.
+- Wird ein Bube gelegt, so darf der auslegende Spieler sich die Farbe wünschen, die als Nächstes zu legen ist.
+  - Wird ein Bube im Anschluss an einen Wunsch gelegt, so entfällt das Wunschrecht.
+  - Der Wunsch gilt dann als erfüllt, der zweite Bube wird als Karte der Farbe des Wunsches aufgefasst.
+- Hält ein Spieler nur noch Buben, so darf er diese in seinem letzten Zug alle auf einmal ablegen.
+- Kann ein Spieler auslegen, so ist er dazu verpflichtet.
+
+### Punkte
 Die Wertung wird wie folgt vorgenommen:
 
 | Karte       | Wert      |
