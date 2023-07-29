@@ -46,40 +46,74 @@ Die Wertung wird wie folgt vorgenommen:
 Der Spieler, der nach allen Runden die meisten Punkte hat, verliert.
 
 ## Semantische Gliederung
-
-Ein **Spiel** besteht aus mehreren **Runden**.
-
-In jeder **Runde** beginnt ein anderer **Spieler**.
-
-Jeder **Spieler** hat eine **Hand**.
-
-Bei jedem **Zug** hat der **Spieler** mehrere Möglichkeiten:
-
+### Grundregeln
 ```mermaid
 flowchart TD
-    hasToDraw{{Karten Ziehen?}}
-    canAvert{{Sieben Vorhanden?}}
-    avert(Spiele eine Sieben!)
-    drawMultiple(Ziehe Karten!)
-    canPlay{{"Passende Karte(n) vorhanden?"}}
-    canPlayLastChance{{"Passende Karte vorhanden?"}}
-    isWish{{Kann wünschen?}}
-    wish(Wünschen!)
-    drawOnce(Ziehe eine Karte!)
-    act("Lege Karte(n)!")
-    
-    hasToDraw -->|Ja| canAvert
-    hasToDraw -->|Nein| canPlay
-    canAvert -->|Ja| avert
-    canAvert -->|Nein| drawMultiple
-    drawMultiple --> canPlay
-    canPlay -->|Ja| act
-    canPlay -->|Nein| drawOnce
-    act --> isWish
-    isWish -->|Ja| wish
-    drawOnce --> canPlayLastChance
-    canPlayLastChance -->|Ja| act
+    stackEmpty{{Stapel leer?}}
+    rebuildStack(Neuen Stapel bilden.)
+    subgraph turn [Zug]
+        hasMatchingCard{{Hat passende Karte?}}
+        drawCard(Karte ziehen.)
+        playCard(Karte legen.)
+        hasMatchingCard -->|Ja| playCard
+        hasMatchingCard -->|Nein| drawCard
+    end
+    turn -->|Nächster Spieler| stackEmpty
+    stackEmpty -->|Ja| rebuildStack
+    stackEmpty -->|Nein| turn
+    rebuildStack --> turn
 ```
+### Erweitert
+```mermaid
+flowchart TD
+    stackEmpty{{Stapel leer?*}}
+    rebuildStack(Neuen Stapel bilden.)
+    subgraph turn [Zug]
+        hasMatchingCard{{Hat passende Karte?}}
+        drawCard(Karte ziehen.)
+        playCard(Karte legen.)
+        drawnCardMatches{{Gezogene Karte passt?}}
+        isSeven{{Letzte Karte Sieben?}}
+        hasSeven{{Hat eigene Sieben?}}
+        playSeven(Spiele Sieben.)
+        next(Nächster Spieler.)
+        drawCards(Karten Ziehen.*)
+        wasAce{{Ist Ass?}}
+        skip(Übernächster Spieler.)
+        wasJack{{Ist Bube?}}
+        wish(Wünsche Farbe.)
+        wishActive{{Wunsch im Gange?}}
+        onlyJacks{{Nur noch Buben?}}
+        playJacks(Buben Spielen.)
+        hasMatchingCard -->|Ja| playCard
+        hasMatchingCard -->|Nein| drawCard
+        drawCard --> drawnCardMatches
+        drawnCardMatches -->|Ja| playCard
+        isSeven -->|Ja| hasSeven
+        isSeven -->|Nein| onlyJacks
+        hasSeven -->|Ja| playSeven
+        drawnCardMatches -->|Nein| next
+        playSeven --> next
+        hasSeven -->|Nein| drawCards
+        playCard --> wasAce
+        wasAce -->|Ja| skip
+        wasAce -->|Nein| wasJack
+        wasJack -->|Ja| wishActive
+        wasJack -->|Nein| next
+        wish --> next
+        wishActive -->|Ja| next
+        wishActive -->|Nein| wish
+        onlyJacks -->|"Ja [optional]"| playJacks
+        onlyJacks --> hasMatchingCard
+    end
+    turn --> stackEmpty
+    stackEmpty -->|Ja| rebuildStack
+    stackEmpty -->|Nein| turn
+    rebuildStack --> turn
+```
+_&#42; Karten werden auch neu gemischt,
+wenn ein Spieler der mehrere Karten ziehen musste nur einen Teil dieser ziehen konnte, 
+damit dieser auch die restlichen Karten aufnehmen kann._
 
 ## Netzwerkprotokoll
 
