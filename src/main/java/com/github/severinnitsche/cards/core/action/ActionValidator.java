@@ -9,7 +9,7 @@ import com.github.severinnitsche.cards.core.card.Type;
 public class ActionValidator {
 
   public static boolean validate(Action action, Information information) {
-    if (information.canWish()) {
+    if (information.mustWish()) {
       return action instanceof Action.Wish;
     }
     if (information.drawCards() > 1) {

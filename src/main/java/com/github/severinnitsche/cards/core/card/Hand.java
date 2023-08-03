@@ -22,14 +22,15 @@ public class Hand implements Iterable<Card> {
   /**
    * Removes the card
    * @param card the card to play
+   * @return the card played
    */
-  public void play(Card card) {
+  public Card play(Card card) {
     var iterator = iterator();
     while (iterator.hasNext()) {
       Card held = iterator.next();
       if (held == card) {
         iterator.remove();
-        return;
+        return card;
       }
     }
     throw new IllegalArgumentException("Cannot play card: "+card);

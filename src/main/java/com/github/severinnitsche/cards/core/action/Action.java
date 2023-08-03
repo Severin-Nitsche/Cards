@@ -6,7 +6,7 @@ import com.github.severinnitsche.cards.core.card.Color;
 /**
  * This interface describes the single actions that might occur during a turn.
  */
-public interface Action {
+public sealed interface Action {
   /**
    * This action is played when the actor deals a single card.
    * @param card the played card

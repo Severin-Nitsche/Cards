@@ -12,8 +12,8 @@ import com.github.severinnitsche.cards.core.card.Stack;
  * @param hand the player's hand
  * @param numberOfCards every player's number of cards
  * @param playerNumber the index of the current player
- * @param canWish whether the next action is eligible for a wish
+ * @param mustWish whether the next action must be a wish
  */
 public record Information(int drawCards, Color wish, Stack stack, Hand hand,
-                          int[] numberOfCards, int playerNumber, boolean canWish) {
+                          int[] numberOfCards, int playerNumber, boolean mustWish) {
 }

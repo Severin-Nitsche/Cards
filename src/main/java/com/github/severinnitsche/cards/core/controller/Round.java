@@ -27,7 +27,8 @@ public class Round {
 
   private int draws; // the number of cards to draw
   private Color wish; // the color of an active wish
-  private boolean canWish; // Is a wish possible?
+  private boolean wishInProgress; // whether a wish is currently in progress
+  private boolean mustWish; // Is a wish possible?
 
   public Round(Random source, int players, int beginner) {
     this.source = source;
@@ -70,7 +71,7 @@ public class Round {
     for (int i = 0; i < players; i++) {
       numOfCards[i] = player[i].cards();
     }
-    return new Information(draws, wish, stack, player[current], numOfCards, current, canWish);
+    return new Information(draws, wish, stack, player[current], numOfCards, current, mustWish);
   }
 
   /**
@@ -99,67 +100,73 @@ public class Round {
    * @return whether the action was applied or not
    */
   public boolean act(Action action) {
-    Information recentInformation = info();
-    if (!ActionValidator.validate(action, recentInformation)) {
+    // setup local variables
+    Information info = info();
+    Hand player = this.player[current];
+
+    // validate actions
+    if (!ActionValidator.validate(action, info)) {
       return false;
     }
+
+    // execute actions
     if (action instanceof Action.Draw draw) {
+      draws = 0;
       for (int i = 0; i < draw.number(); i++) {
-        recentInformation.hand().draw(deck.draw());
-        if (deck.cards() == 0) {
+        if (deck.capacity() > 0) {
+          player.draw(deck.draw());
+        } else {
           var temp = deck;
           deck = stack;
           stack = temp;
           stack.add(deck.draw());
-          deck.shuffle(source);
+          deck.shuffle(this.source);
         }
       }
-      if (wish == null) {
-        if (draw.number() == 1 && !ActionValidator.fittingCard(recentInformation.hand(), stack.peek())) {
-          current = (current + 1) % players;
-        }
-      } else {
-        if (draw.number() == 1 && !ActionValidator.fittingCardWish(recentInformation.hand(), wish)) {
-          current = (current + 1) % players;
-        }
+      if (draw.number() == 1) {
+        current = (current + 1) % players;
       }
-      draws = 0;
-      return true;
-    }
-    if (action instanceof Action.Wish wishAction) {
-      canWish = false;
-      wish = wishAction.color();
-      current = (current + 1) % players;
-      return true;
     }
     if (action instanceof Action.Play play) {
-      recentInformation.hand().play(play.card());
-      stack.add(play.card());
-      if (play.card().type == Type.SEVEN) {
+      stack.add(player.play(play.card()));
+      if (play.card().type == Type.ACE) {
+        current = (current + 2) % players;
+        wishInProgress = false;
+        wish = null;
+      } else if (play.card().type == Type.JACK) {
+        if (wishInProgress) {
+          wishInProgress = false;
+          current = (current + 1) % players;
+        } else {
+          mustWish = true;
+          wish = null;
+        }
+      } else if (play.card().type == Type.SEVEN) {
         draws += 2;
-      }
-      canWish = wish == null && play.card().type == Type.JACK;
-      if (play.card().type != Type.JACK) {
+        current = (current + 1) % players;
+        wishInProgress = false;
+        wish = null;
+      } else {
+        current = (current + 1) % players;
+        wishInProgress = false;
         wish = null;
       }
-      if (!canWish) {
-        if (play.card().type == Type.ACE) {
-          current = (current + 2) % players;
-        } else {
-          current = (current + 1) % players;
-        }
-      }
-      if (recentInformation.hand().cards() == 0) {
-        current = -1;
-      }
-      return true;
+    }
+    if (action instanceof Action.Wish wish) {
+      wishInProgress = true;
+      mustWish = false;
+      this.wish = wish.color();
+      current = (current + 1) % players;
     }
     if (action instanceof Action.PlayRemaining) {
-      recentInformation.hand().removeAll();
-      current = -1;
-      return true;
+      player.removeAll();
     }
-    throw new IllegalStateException("Did not expect action to be of type: "+action.getClass());
+
+    // check for the end of round
+    if (player.cards() == 0) {
+      current = -1;
+    }
+    return true;
   }
 
 }
