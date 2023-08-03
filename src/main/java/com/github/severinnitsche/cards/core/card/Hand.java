@@ -95,9 +95,21 @@ public class Hand implements Iterable<Card> {
     return true;
   }
 
+  /**
+   * @return true, if there is a seven in the hand
+   */
+  public boolean hasSeven() {
+    for (Card hold : this) {
+      if (hold.type == Type.SEVEN) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @Override
   public Iterator<Card> iterator() {
-    return new Iterator<Card>() {
+    return new Iterator<>() {
       int i = 0;
 
       @Override
