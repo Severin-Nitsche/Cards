@@ -200,6 +200,7 @@ Dabei werden folgende Nachrichten versendet:
 | Server | Broadcast | round  | `0x72` | integer^2  |
 | Server | Broadcast | result | `0x73` | \[integer] |
 | Server | Broadcast | yeet   | `0x74` | integer    |
+| Client | Server    | yeet   | `0x47` | N/A        |
 
 - Strings werden `UTF-16` kodiert und `\0` terminiert.
 - Integer werden als `uint_8` versendet
@@ -223,3 +224,43 @@ Dabei werden folgende Nachrichten versendet:
     | König | `0xD` |
     | Ass   | `0xE` |
 - Listen setzen sich zusammen als `[Wert]` `0x1` `[Wert]` ... `[Wert]` `0x0`
+
+### Formelles Protokoll
+Die Verbindung läuft über TCP unverschlüsselt.
+1. Handshake:
+   1. Client -> Server: `id <identifier>`
+   2. Server -> Client: `uint8`
+   > Der Client authentifiziert sich mit dem angegebenen identifier und bekommt seine Spieler-ID zugewiesen.
+2. Round Announcement:
+   - Server-Broadcast: `round: <round>`
+   > Der Server gibt den Beginn der angegebenen Spielrunde bekannt.
+3. Dealing:
+   - Server -> Client: `deal <cards...>`
+   > Der Server verteilt die Karten an jeden Client.
+4. Turn:
+   1. Server-Broadcast: `draw: <amount>`
+   2. Server-Broadcast: `wish: <color|\0>`
+   3. \[Server-Broadcast: `stack: <card>`]
+   4. Server-Broadcast: `cards: <ints...>`
+   5. Server-Broadcast: `player: <number>`
+   6. Server-Broadcast: `time: <millis>`
+   > Der Server broadcastet die aktuelle Zuginformation.
+   > Anzahl der zu ziehenden Karten, Farbe des aktiven Wunsches,
+   > Falls nötig den neuen Ablagestapel (einzelne Karte nach neuem Mischen),
+   > Die Anzahl der Karten jedes Spielers,
+   > Die Spielernummer (ID) des aktiven Spielers,
+   > Dessen Zeit in [ms] oder 0, falls kein Limit angewendet wird.
+   7. Client-Server: `play: <card> | take: <number> | finish: - | wish: <color>`
+   8. Server-Broadcast: `play: <card> | draw: <number> | finish: - | wish: <color>`
+   9. \[Server-Client: `deal: <cards...>`]
+   > Der Client sendet dem Server seinen Zug.
+   > Dieser spiegelt diesen dann an alle anderen.
+   > Muss der Client Karten ziehen erhält er zusätzlich die Information über die erhaltenen Karten.
+5. Results:
+   - Server-Broadcast: `result: <ints...>`
+   > Nach jeder Runde verkündet der Server den aktuellen Spielstand
+- Yeeting:
+   - Server-Broadcast: `yeet: <player>`
+   - Client-Server: `yeet: -`
+   > Jeder Spieler kann jederzeit das Spiel verlassen.
+   > Der Server kann jederzeit bekannt geben, dass ein Spieler das Spiel verlassen hat.
